@@ -22,7 +22,7 @@ public class CreditCard {
     }
 
     public boolean isValid() {
-        return expirationDate.isAfter(LocalDate.now());
+        return this.expirationDate.isAfter(LocalDate.now());
     }
 
     public boolean isEqualTo(CreditCard anotherCard) {

@@ -1,9 +1,8 @@
 package com.eldar.challenge_java.controller;
 
-import com.eldar.challenge_java.enums.Brand;
 import com.eldar.challenge_java.dto.FeeRequestDto;
 import com.eldar.challenge_java.dto.FeeResponseDto;
-import com.eldar.challenge_java.utils.FeeUtil;
+import com.eldar.challenge_java.service.CreditCardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,12 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class CreditCardController {
 
+    private final CreditCardService creditCardService;
+
+    public CreditCardController(CreditCardService creditCardService) {
+        this.creditCardService = creditCardService;
+    }
+
     @PostMapping("/calculate-fee")
     @Operation(summary = "Calculate fee", description = "Calculate the fee for a credit card operation based on the card brand and amount")
     public FeeResponseDto calculateFee(@Valid @RequestBody FeeRequestDto request) {
-        double feePercentage = FeeUtil.calculateFeePercentage(Brand.fromString(request.getBrand()));
-        double fee = request.getAmount() * feePercentage / 100;
-
-        return new FeeResponseDto(request.getBrand(), request.getAmount(), fee, feePercentage);
+        return creditCardService.calculateFee(request);
     }
 }
